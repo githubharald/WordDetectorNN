@@ -5,7 +5,7 @@ A neural network based detector for handwritten words.
 ## Run demo
 * Download [trained model](https://www.dropbox.com/s/mqhco2q67ovpfjq/model.zip?dl=1), and place the unzipped files into the `model` directory
 * Go to the `src` directory and execute `python infer.py`
-* This opens a window showing the detected words detected in the test images (located in `data/test`)
+* This opens a window showing the words detected in the test images (located in `data/test`)
 * Required libs: torch, numpy, sklearn, cv2, path, matplotlib
 
 ![aabbs](./doc/aabbs.png)
