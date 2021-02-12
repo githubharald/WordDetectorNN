@@ -41,6 +41,7 @@ A neural network based detector for handwritten words.
 * DBSCAN clusters the predicted bounding boxes
 * The backbone of the neural network is based on the ResNet18 model (taken from torchvision, with modifications)
 * The model is inspired by the ideas of [Zhou](https://openaccess.thecvf.com/content_cvpr_2017/papers/Zhou_EAST_An_Efficient_CVPR_2017_paper.pdf) and [Axler](http://www.cs.tau.ac.il/~wolf/papers/dataset-agnostic-word.pdf)
+* See [this article](https://githubharald.github.io/word_detector.html) for more details
 
 ![seg](./doc/seg.png)
 

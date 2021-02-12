@@ -26,9 +26,9 @@ def encode(shape, gt, f=1.0):
 
         aabb_word = aabb.scale_around_center(0.5, 0.5).as_type(int).clip(aabb_clip)
         aabb_sur = aabb.as_type(int).clip(aabb_clip)
-        gt_map[MapOrdering.SEG_SURROUNDING, aabb_sur.ymin:aabb_sur.ymax, aabb_sur.xmin:aabb_sur.xmax] = 1
-        gt_map[MapOrdering.SEG_SURROUNDING, aabb_word.ymin:aabb_word.ymax, aabb_word.xmin:aabb_word.xmax] = 0
-        gt_map[MapOrdering.SEG_WORD, aabb_word.ymin:aabb_word.ymax, aabb_word.xmin:aabb_word.xmax] = 1
+        gt_map[MapOrdering.SEG_SURROUNDING, aabb_sur.ymin:aabb_sur.ymax + 1, aabb_sur.xmin:aabb_sur.xmax + 1] = 1
+        gt_map[MapOrdering.SEG_SURROUNDING, aabb_word.ymin:aabb_word.ymax + 1, aabb_word.xmin:aabb_word.xmax + 1] = 0
+        gt_map[MapOrdering.SEG_WORD, aabb_word.ymin:aabb_word.ymax + 1, aabb_word.xmin:aabb_word.xmax + 1] = 1
 
         # geometry map TODO vectorize
         for x in range(aabb_word.xmin, aabb_word.xmax + 1):
@@ -38,7 +38,8 @@ def encode(shape, gt, f=1.0):
                 gt_map[MapOrdering.GEO_LEFT, y, x] = x - aabb.xmin
                 gt_map[MapOrdering.GEO_RIGHT, y, x] = aabb.xmax - x
 
-    gt_map[MapOrdering.SEG_BACKGROUND] = np.clip(1 - gt_map[MapOrdering.SEG_WORD] - gt_map[MapOrdering.SEG_SURROUNDING], 0, 1)
+    gt_map[MapOrdering.SEG_BACKGROUND] = np.clip(1 - gt_map[MapOrdering.SEG_WORD] - gt_map[MapOrdering.SEG_SURROUNDING],
+                                                 0, 1)
 
     return gt_map
 
@@ -100,9 +101,9 @@ def decode(pred_map, comp_fg=fg_by_threshold(0.5), f=1):
 
 def main():
     import matplotlib.pyplot as plt
-    aabbs_in = [AABB(10, 20, 30, 40)]
-    encoded = encode((25, 25), aabbs_in, f=0.25)
-    aabbs_out = decode(encoded, f=4)
+    aabbs_in = [AABB(10, 30, 30, 60)]
+    encoded = encode((50, 50), aabbs_in, f=0.5)
+    aabbs_out = decode(encoded, f=2)
     print(aabbs_out[0])
     plt.subplot(151)
     plt.imshow(encoded[MapOrdering.SEG_WORD:MapOrdering.SEG_BACKGROUND + 1].transpose(1, 2, 0))
