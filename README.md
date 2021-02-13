@@ -26,9 +26,9 @@ A neural network based detector for handwritten words.
   * `--caching`: cache the dataset to avoid loading and decoding the png images, cache file is stored in the dataset directory
   * `--pretrained`: initialize with saved model weights 
   * `--val_freq`: speed up training by only validating each n-th epoch
+  * `--early_stopping`: stop training after n validation steps without improvement
 * The model weights are saved every time the validation loss decreases
 * A log is written into the `log` directory, which can be opened with tensorboard
-* The training loop is an infinite loop, so you manually have to kill the process when you don't see any more improvement (e.g. by looking at tensorboard)
 * Executing `python eval.py` evaluates the trained model
 
 

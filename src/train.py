@@ -66,6 +66,7 @@ def main():
     parser.add_argument('--data_dir', type=Path, required=True)
     parser.add_argument('--pretrained', action='store_true')
     parser.add_argument('--val_freq', type=int, default=1)
+    parser.add_argument('--early_stopping', type=int, default=50)
     args = parser.parse_args()
 
     writer = SummaryWriter('../log')
@@ -90,6 +91,7 @@ def main():
     # main training loop
     epoch = 0
     best_val_loss = np.finfo(np.float32).max
+    no_improvement_since = 0
     while True:
         epoch += 1
         print(f'Epoch: {epoch}')
@@ -98,11 +100,19 @@ def main():
         if epoch % args.val_freq == 0:
             val_loss = validate(net, loader_val, writer)
             if val_loss < best_val_loss:
-                print(f'Improved on validation set (loss: {best_val_loss}->{val_loss}), saving model')
+                print(f'Improved on validation set (loss: {best_val_loss}->{val_loss}), save model')
+                no_improvement_since = 0
                 best_val_loss = val_loss
                 torch.save(net.state_dict(), '../model/weights')
                 with open('../model/metadata.json', 'w') as f:
                     json.dump({'epoch': epoch, 'val_loss': val_loss}, f)
+            else:
+                no_improvement_since += 1
+
+        # stop training if there were too many validation steps without improvement
+        if no_improvement_since >= args.early_stopping:
+            print(f'No improvement for {no_improvement_since} validation steps, stop training')
+            break
 
 
 if __name__ == '__main__':
