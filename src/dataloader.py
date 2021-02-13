@@ -13,6 +13,7 @@ DataLoaderItem = namedtuple('DataLoaderItem', 'batch_imgs,batch_gt_maps,batch_aa
 
 class DataLoaderIAM:
     """loader for IAM dataset"""
+
     def __init__(self, dataset, batch_size, input_size, output_size):
         self.dataset = dataset
         self.batch_size = batch_size
@@ -63,15 +64,22 @@ class DataLoaderIAM:
 
                 # photometric data augmentation (image [-0.5..0.5] only)
                 img = (img / 255 - 0.5)
-                if prob_true(0.25):
+                if prob_true(0.1):  # random distractors (lines)
+                    num_lines = np.random.randint(1, 20)
+                    for _ in range(num_lines):
+                        rand_pt = lambda: (np.random.randint(0, img.shape[1]), np.random.randint(0, img.shape[0]))
+                        color = np.random.triangular(-0.5, 0, 0.5)
+                        thickness = np.random.randint(1, 3)
+                        cv2.line(img, rand_pt(), rand_pt(), color, thickness)
+                if prob_true(0.25):  # contrast stretch
                     img = (img - img.min()) / (img.max() - img.min()) - 0.5
-                if prob_true(0.5):
+                if prob_true(0.5):  # reduce contrast
                     img = img * np.random.uniform(0.5, 1)
-                if prob_true(0.1):
+                if prob_true(0.1):  # random noise
                     img = img + np.random.uniform(-0.1, 0.1, size=img.shape)
-                if prob_true(0.1):
+                if prob_true(0.1):  # change thickness of text
                     img = cv2.erode(img, np.ones((3, 3)))
-                if prob_true(0.1):
+                if prob_true(0.1): # change thickness of text
                     img = cv2.dilate(img, np.ones((3, 3)))
 
             else:
@@ -104,6 +112,7 @@ class DataLoaderIAM:
 
 class DataLoaderImgFile:
     """loader which simply goes through all jpg files of a directory"""
+
     def __init__(self, root_dir, input_size, device, max_side_len=1024):
         self.fn_imgs = root_dir.files('*.jpg')
         self.input_size = input_size
