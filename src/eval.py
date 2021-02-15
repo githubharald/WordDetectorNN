@@ -5,6 +5,7 @@ import numpy as np
 import torch
 from path import Path
 
+from aabb import AABB
 from aabb_clustering import cluster_aabbs
 from coding import decode, fg_by_cc
 from dataloader import DataLoaderIAM
@@ -78,6 +79,8 @@ def evaluate(net, loader, thres=0.5, max_aabbs=None):
             pred_map = y_np[i]
 
             aabbs = decode(pred_map, comp_fg=fg_by_cc(thres, max_aabbs), f=scale_up)
+            h, w = img_np.shape
+            aabbs = [aabb.clip(AABB(0, w - 1, 0, h - 1)) for aabb in aabbs]  # bounding box must be inside img
             clustered_aabbs = cluster_aabbs(aabbs)
 
             if loader_item.batch_aabbs is not None:

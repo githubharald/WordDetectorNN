@@ -71,15 +71,14 @@ class DataLoaderIAM:
                         color = np.random.triangular(-0.5, 0, 0.5)
                         thickness = np.random.randint(1, 3)
                         cv2.line(img, rand_pt(), rand_pt(), color, thickness)
-                if prob_true(0.25):  # contrast stretch
-                    img = (img - img.min()) / (img.max() - img.min()) - 0.5
-                if prob_true(0.5):  # reduce contrast
-                    img = img * np.random.uniform(0.5, 1)
+                if prob_true(0.5):  # random contrast
+                    img = (img - img.min()) / (img.max() - img.min()) - 0.5  # stretch
+                    img = img * np.random.triangular(0.1, 0.9, 1)  # reduce contrast
                 if prob_true(0.1):  # random noise
                     img = img + np.random.uniform(-0.1, 0.1, size=img.shape)
                 if prob_true(0.1):  # change thickness of text
                     img = cv2.erode(img, np.ones((3, 3)))
-                if prob_true(0.1): # change thickness of text
+                if prob_true(0.1):  # change thickness of text
                     img = cv2.dilate(img, np.ones((3, 3)))
 
             else:
