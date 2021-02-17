@@ -74,12 +74,14 @@ class DataLoaderIAM:
                 if prob_true(0.5):  # random contrast
                     img = (img - img.min()) / (img.max() - img.min()) - 0.5  # stretch
                     img = img * np.random.triangular(0.1, 0.9, 1)  # reduce contrast
-                if prob_true(0.1):  # random noise
+                if prob_true(0.25):  # random noise
                     img = img + np.random.uniform(-0.1, 0.1, size=img.shape)
-                if prob_true(0.1):  # change thickness of text
+                if prob_true(0.25):  # change thickness of text
                     img = cv2.erode(img, np.ones((3, 3)))
-                if prob_true(0.1):  # change thickness of text
+                if prob_true(0.25):  # change thickness of text
                     img = cv2.dilate(img, np.ones((3, 3)))
+                if prob_true(0.1):  # invert image
+                    img = 0.5 - img
 
             else:
                 img = (img / 255 - 0.5)
