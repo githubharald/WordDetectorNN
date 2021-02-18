@@ -1,7 +1,6 @@
 import argparse
 import json
 
-import numpy as np
 import torch
 from path import Path
 from torch.utils.tensorboard import SummaryWriter
@@ -31,7 +30,7 @@ def validate(net, loader, writer):
         writer.add_scalar('val_precision', res.metrics.precision(), global_step)
         writer.add_scalar('val_f1', res.metrics.f1(), global_step)
 
-    return res.loss
+    return res.metrics.f1()
 
 
 def train(net, optimizer, loader, writer):
@@ -90,7 +89,7 @@ def main():
 
     # main training loop
     epoch = 0
-    best_val_loss = np.finfo(np.float32).max
+    best_val_f1 = 0
     no_improvement_since = 0
     while True:
         epoch += 1
@@ -98,14 +97,14 @@ def main():
         train(net, optimizer, loader_train, writer)
 
         if epoch % args.val_freq == 0:
-            val_loss = validate(net, loader_val, writer)
-            if val_loss < best_val_loss:
-                print(f'Improved on validation set (loss: {best_val_loss}->{val_loss}), save model')
+            val_f1 = validate(net, loader_val, writer)
+            if val_f1 > best_val_f1:
+                print(f'Improved on validation set (f1: {best_val_f1}->{val_f1}), save model')
                 no_improvement_since = 0
-                best_val_loss = val_loss
+                best_val_f1 = val_f1
                 torch.save(net.state_dict(), '../model/weights')
                 with open('../model/metadata.json', 'w') as f:
-                    json.dump({'epoch': epoch, 'val_loss': val_loss}, f)
+                    json.dump({'epoch': epoch, 'val_f1': val_f1}, f)
             else:
                 no_improvement_since += 1
 

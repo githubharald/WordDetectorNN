@@ -27,7 +27,7 @@ A neural network based detector for handwritten words.
   * `--pretrained`: initialize with saved model weights 
   * `--val_freq`: speed up training by only validating each n-th epoch
   * `--early_stopping`: stop training after n validation steps without improvement
-* The model weights are saved every time the validation loss decreases
+* The model weights are saved every time the f1 score on the validation set increases
 * A log is written into the `log` directory, which can be opened with tensorboard
 * Executing `python eval.py` evaluates the trained model
 

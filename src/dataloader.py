@@ -38,7 +38,7 @@ class DataLoaderIAM:
 
             if self.is_random:
                 # geometric data augmentation (image [0..255] and gt)
-                if prob_true(0.5):
+                if prob_true(0.75):
                     # random scale
                     fx = np.random.uniform(0.5, 1.5)
                     fy = np.random.uniform(0.5, 1.5)
@@ -64,14 +64,14 @@ class DataLoaderIAM:
 
                 # photometric data augmentation (image [-0.5..0.5] only)
                 img = (img / 255 - 0.5)
-                if prob_true(0.1):  # random distractors (lines)
+                if prob_true(0.25):  # random distractors (lines)
                     num_lines = np.random.randint(1, 20)
                     for _ in range(num_lines):
                         rand_pt = lambda: (np.random.randint(0, img.shape[1]), np.random.randint(0, img.shape[0]))
                         color = np.random.triangular(-0.5, 0, 0.5)
                         thickness = np.random.randint(1, 3)
                         cv2.line(img, rand_pt(), rand_pt(), color, thickness)
-                if prob_true(0.5):  # random contrast
+                if prob_true(0.75):  # random contrast
                     img = (img - img.min()) / (img.max() - img.min()) - 0.5  # stretch
                     img = img * np.random.triangular(0.1, 0.9, 1)  # reduce contrast
                 if prob_true(0.25):  # random noise
@@ -80,7 +80,7 @@ class DataLoaderIAM:
                     img = cv2.erode(img, np.ones((3, 3)))
                 if prob_true(0.25):  # change thickness of text
                     img = cv2.dilate(img, np.ones((3, 3)))
-                if prob_true(0.1):  # invert image
+                if prob_true(0.25):  # invert image
                     img = 0.5 - img
 
             else:
