@@ -2,8 +2,8 @@ import pickle
 import xml.etree.ElementTree as ET
 
 import cv2
-from path import Path
-
+import os
+from os import path as Path
 from aabb import AABB
 
 
