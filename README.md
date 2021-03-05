@@ -2,11 +2,24 @@
 
 A neural network based detector for handwritten words.
 
+## Requirements 
+```
+conda create -n wdnn python=3.6
+conda activate wdnn
+### Note to change the cudatoolkit version to whatever version you want
+conda install pytorch torchvision torchaudio cudatoolkit=11.0 -c pytorch -c conda-forge
+conda install -c conda-forge scikit-learn matplotlib opencv path.py tensorboard
+```
+
 ## Run demo
-* Download [trained model](https://www.dropbox.com/s/mqhco2q67ovpfjq/model.zip?dl=1), and place the unzipped files into the `model` directory
-* Go to the `src` directory and execute `python infer.py`
-* This opens a window showing the words detected in the test images (located in `data/test`)
-* Required libs: torch, numpy, sklearn, cv2, path, matplotlib
+```
+cd ./model
+wget https://www.dropbox.com/s/mqhco2q67ovpfjq/model.zip?dl=1 -O model.zip
+unzip model.zip
+cd ../src
+python infer.py
+```
+* This opens a window showing the detected words of the test images, which are located in `data/test`
 
 ![aabbs](./doc/aabbs.png)
 
@@ -14,7 +27,7 @@ A neural network based detector for handwritten words.
 ## Train model
 ### Data
 * The model is trained with the [IAM dataset](https://fki.tic.heia-fr.ch/databases/iam-handwriting-database)
-* Download the forms and the xml files
+* Download the `data/forms*.tgz` and the `data/xml.tgz` files
 * Create a dataset directory on your disk with two subdirectories: `gt` and `img`
 * Put all form images into the `img` directory
 * Put all xml files into the `gt` directory
