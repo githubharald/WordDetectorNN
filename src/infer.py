@@ -1,7 +1,8 @@
 import argparse
 
 import torch
-from path import Path
+import os
+from os import path as Path
 
 from dataloader import DataLoaderImgFile
 from eval import evaluate
