@@ -3,8 +3,8 @@ from collections import namedtuple
 
 import numpy as np
 import torch
-from path import Path
-
+import os
+from os import path as Path
 from aabb import AABB
 from aabb_clustering import cluster_aabbs
 from coding import decode, fg_by_cc
