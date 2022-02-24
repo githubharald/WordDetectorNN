@@ -129,7 +129,7 @@ class DataLoaderImgFile:
     def __getitem__(self, item):
         orig = cv2.imread(self.fn_imgs[item], cv2.IMREAD_GRAYSCALE)
 
-        f = min(self.max_side_len / orig.shape[0], self.max_side_len / orig.shape[0])
+        f = min(self.max_side_len / orig.shape[0], self.max_side_len / orig.shape[1])
         if f < 1:
             orig = cv2.resize(orig, dsize=None, fx=f, fy=f)
         img = np.ones((self.ceil32(orig.shape[0]), self.ceil32(orig.shape[1])), np.uint8) * 255
@@ -142,7 +142,7 @@ class DataLoaderImgFile:
 
     def get_scale_factor(self, item):
         img = cv2.imread(self.fn_imgs[item], cv2.IMREAD_GRAYSCALE)
-        f = min(self.max_side_len / img.shape[0], self.max_side_len / img.shape[0])
+        f = min(self.max_side_len / img.shape[0], self.max_side_len / img.shape[1])
         return f if f < 1 else 1
 
     def get_original_img(self, item):
